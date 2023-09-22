@@ -23,6 +23,7 @@ public class Launch {
     public static LaunchClassLoader classLoader;
 
     private Launch() {
+        System.out.println("NPOP loaded as LaunchWrapper.");
         final URLClassLoader ucl = (URLClassLoader) getClass().getClassLoader();
         classLoader = new LaunchClassLoader(ucl.getURLs());
         blackboard = new HashMap<String,Object>();
