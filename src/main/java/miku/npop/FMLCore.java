@@ -21,10 +21,12 @@ import static java.lang.reflect.Modifier.*;
 public class FMLCore implements IFMLLoadingPlugin, IClassTransformer {
     @SuppressWarnings("unchecked")
     public FMLCore() throws NoSuchFieldException, IllegalAccessException {
+        System.out.println("NPOP loading as FMLLoadingPlugin.");
         Field transformers = LaunchClassLoader.class.getDeclaredField("transformers");
         transformers.setAccessible(true);
         ((List<IClassTransformer>)transformers.get(Launch.classLoader)).add(this);
         transformers.setAccessible(false);
+        System.out.println("Success.");
     }
     @Override
     public byte[] transform(String name, String transformedName, byte[] basicClass) {
