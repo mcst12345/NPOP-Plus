@@ -1,10 +1,14 @@
 package net.minecraft.launchwrapper;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+
 import java.io.*;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
+import java.nio.file.Files;
 import java.security.CodeSigner;
 import java.security.CodeSource;
 import java.util.*;
@@ -15,30 +19,28 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Logger;
+import static miku.npop.PreMain.AT;
 
 public class LaunchClassLoader extends URLClassLoader {
     public static final int BUFFER_SIZE = 1 << 12;
     private List<URL> sources;
     private ClassLoader parent = getClass().getClassLoader();
 
-    private List<IClassTransformer> transformers = new ArrayList<IClassTransformer>(2);
-    private Map<String, Class<?>> cachedClasses = new ConcurrentHashMap<String, Class<?>>();
-    private Set<String> invalidClasses = new HashSet<String>(1000);
+    private List<IClassTransformer> transformers = new ArrayList<>(2);
+    private Map<String, Class<?>> cachedClasses = new ConcurrentHashMap<>();
+    private Set<String> invalidClasses = new HashSet<>(1000);
 
-    private Set<String> classLoaderExceptions = new HashSet<String>();
-    private Set<String> transformerExceptions = new HashSet<String>();
-    private Map<Package, Manifest> packageManifests = new ConcurrentHashMap<Package, Manifest>();
-    private Map<String,byte[]> resourceCache = new ConcurrentHashMap<String,byte[]>(1000);
-    private Set<String> negativeResourceCache = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+    private Set<String> classLoaderExceptions = new HashSet<>();
+    private Set<String> transformerExceptions = new HashSet<>();
+    private Map<Package, Manifest> packageManifests = new ConcurrentHashMap<>();
+    private Map<String,byte[]> resourceCache = new ConcurrentHashMap<>(1000);
+    private Set<String> negativeResourceCache = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     private IClassNameTransformer renameTransformer;
 
     private static final Manifest EMPTY = new Manifest();
 
-    private final ThreadLocal<byte[]> loadBuffer = new ThreadLocal<byte[]>();
+    private final ThreadLocal<byte[]> loadBuffer = new ThreadLocal<>();
 
     private static final String[] RESERVED_NAMES = {"CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"};
 
@@ -49,7 +51,7 @@ public class LaunchClassLoader extends URLClassLoader {
 
     public LaunchClassLoader(URL[] sources) {
         super(sources, null);
-        this.sources = new ArrayList<URL>(Arrays.asList(sources));
+        this.sources = new ArrayList<>(Arrays.asList(sources));
 
         // classloader exclusions
         addClassLoaderExclusion("java.");
@@ -112,7 +114,20 @@ public class LaunchClassLoader extends URLClassLoader {
         }
 
         for (final String exception : transformerExceptions) {
-            if (name.startsWith(exception)) {
+            if(name.startsWith(exception)){
+                try {
+                    byte[] clazz = getClassBytes(name);
+                    if (clazz != null) {
+                        clazz = AT.transform(this, name, null, null, clazz);
+                        final String fileName = name.replace('.', '/').concat(".class");
+                        URLConnection urlConnection = findCodeSourceConnectionFor(fileName);
+                        final CodeSource codeSource = urlConnection == null ? null : new CodeSource(urlConnection.getURL(), new CodeSigner[0]);
+                        final Class<?> Clazz = defineClass(name, clazz, 0, clazz.length, codeSource);
+                        cachedClasses.put(name, Clazz);
+                        return Clazz;
+                    }
+                } catch (Throwable ignored) {
+                }
                 try {
                     final Class<?> clazz = super.findClass(name);
                     cachedClasses.put(name, clazz);
@@ -173,10 +188,12 @@ public class LaunchClassLoader extends URLClassLoader {
                 }
             }
 
-            final byte[] transformedClass = runTransformers(untransformedName, transformedName, getClassBytes(untransformedName));
+            byte[] transformedClass = runTransformers(untransformedName, transformedName, getClassBytes(untransformedName));
             if (DEBUG_SAVE) {
                 saveTransformedClass(transformedClass, transformedName);
             }
+
+            transformedClass = AT.transform(this, transformedName, null, null, transformedClass);
 
             final CodeSource codeSource = urlConnection == null ? null : new CodeSource(urlConnection.getURL(), signers);
             final Class<?> clazz = defineClass(transformedName, transformedClass, 0, transformedClass.length, codeSource);
@@ -211,7 +228,7 @@ public class LaunchClassLoader extends URLClassLoader {
         try {
             LogWrapper.fine("Saving transformed class \"%s\" to \"%s\"", transformedName, outFile.getAbsolutePath().replace('\\', '/'));
 
-            final OutputStream output = new FileOutputStream(outFile);
+            final OutputStream output = Files.newOutputStream(outFile.toPath());
             output.write(data);
             output.close();
         } catch (IOException ex) {
