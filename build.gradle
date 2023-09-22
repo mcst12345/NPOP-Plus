@@ -89,7 +89,8 @@ jar {
                 'ForceLoadAsMod'             : 'true',
                 "Premain-Class"              : "miku.npop.PreMain",
                 "Can-Redefine-Classes"       : "true",
-                "Can-Retransform-Classes"    : "true"
+                "Can-Retransform-Classes"    : "true",
+                "FMLCorePlugin"              : "miku.npop.FMLCore"
         ])
     }
     from{
