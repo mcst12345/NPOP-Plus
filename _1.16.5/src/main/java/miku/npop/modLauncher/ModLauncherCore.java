@@ -8,7 +8,9 @@ import joptsimple.OptionSpecBuilder;
 import sun.misc.Unsafe;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
@@ -17,6 +19,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ModLauncherCore implements ITransformationService {
+    public static final ClassLoader AppClassLoader = Launcher.class.getClassLoader();
     public static final Unsafe UNSAFE;
     public static final Field transformersField;
     public static final Field pluginHandlerField;
@@ -25,7 +28,9 @@ public class ModLauncherCore implements ITransformationService {
     public static final Field classLoaderField;
     public static final Field classTransformerField;
     public static final Field transformationServicesHandlerField;
-    private static final NPOPTransformationServicesHandler Handler;
+    private static final Object Handler;
+    public static final Method findClass;
+    public static final Class<?> NPOPTransformationServicesHandlerClass;
 
     public static final TransformingClassLoader classLoader;
     public static final Object transformationServicesHandler;
@@ -44,6 +49,8 @@ public class ModLauncherCore implements ITransformationService {
             classTransformerField = TransformingClassLoader.class.getDeclaredField("classTransformer");
             transformationServicesHandlerField = Launcher.class.getDeclaredField("transformationServicesHandler");
 
+            findClass = AppClassLoader.getClass().getDeclaredMethod("loadClass",String.class,boolean.class);
+
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
@@ -55,6 +62,14 @@ public class ModLauncherCore implements ITransformationService {
         classLoaderField.setAccessible(true);
         classTransformerField.setAccessible(true);
         transformationServicesHandlerField.setAccessible(true);
+
+        findClass.setAccessible(true);
+
+        try {
+            NPOPTransformationServicesHandlerClass = (Class<?>) findClass.invoke(AppClassLoader,"cpw.mods.modlauncher.NPOPTransformationServicesHandler",true);
+        } catch (Throwable t){
+            throw new RuntimeException(t);
+        }
 
         try {
             UNSAFE = (Unsafe) unsafe_field.get(null);
@@ -80,16 +95,18 @@ public class ModLauncherCore implements ITransformationService {
 
             System.out.println("Constructing NPOPTransformationServicesHandler.");
 
-            long tmp = UNSAFE.objectFieldOffset(NPOPTransformationServicesHandler.transformStoreField);
+            long tmp = UNSAFE.objectFieldOffset((Field) NPOPTransformationServicesHandlerClass.getField("transformStoreField").get(null));
             TransformStore transformStore = (TransformStore) UNSAFE.getObjectVolatile(transformationServicesHandler,tmp);
 
-            tmp = UNSAFE.objectFieldOffset(NPOPTransformationServicesHandler.serviceLookupField);
+            tmp = UNSAFE.objectFieldOffset((Field) NPOPTransformationServicesHandlerClass.getField("serviceLookupField").get(null));
             Map<String, TransformationServiceDecorator> serviceLookup = (Map<String, TransformationServiceDecorator>) UNSAFE.getObjectVolatile(transformationServicesHandler,tmp);
 
-            tmp = UNSAFE.objectFieldOffset(NPOPTransformationServicesHandler.transformationServicesField);
+            tmp = UNSAFE.objectFieldOffset((Field) NPOPTransformationServicesHandlerClass.getField("transformationServicesField").get(null));
             ServiceLoader<ITransformationService> transformationServices = (ServiceLoader<ITransformationService>) UNSAFE.getObjectVolatile(transformationServicesHandler,tmp);
 
-            Handler = new NPOPTransformationServicesHandler(transformStore,serviceLookup,transformationServices);
+            Constructor<?> constructor = NPOPTransformationServicesHandlerClass.getConstructor(TransformStore.class,Map.class,ServiceLoader.class);
+
+            Handler = constructor.newInstance(transformStore,serviceLookup,transformationServices);
 
             System.out.println("NPOPTransformationServicesHandler created. Replacing the original one.");
 
