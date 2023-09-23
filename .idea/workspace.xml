@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80667ce2-b30e-4419-96cc-933fb109eb1a" name="更改" comment="commit">
-      <change afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/ModLauncherCore.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/cpw/mods/modlauncher/NPOPClassTransformer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/ModLauncherCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/modLauncher/ModLauncherCore.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,24 +90,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;1.8&quot;,
-    &quot;jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: &quot;1.8&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/root/IdeaProjects/npop/src/main/resources&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.42371404&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;http.proxy&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
+    "jdk.selected.JAVA_MODULE": "1.8",
+    "jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": "1.8",
+    "last_opened_file_path": "/root/IdeaProjects/npop/src/main/resources",
+    "project.structure.last.edited": "模块",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.42371404",
+    "settings.editor.selected.configurable": "http.proxy"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="cpw.mods.modlauncher" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="net.minecraft.launchwrapper.injector" />
@@ -309,12 +315,31 @@
       <option name="project" value="LOCAL" />
       <updated>1695390627608</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="commit">
+      <option name="closed" value="true" />
+      <created>1695391215201</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1695391215201</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="commit" />
     <option name="LAST_COMMIT_MESSAGE" value="commit" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/cpw.mods/modlauncher/8.1.3/8639a7c4b795b471b88573617fb8c78688109ce4/modlauncher-8.1.3-sources.jar!/cpw/mods/modlauncher/TransformingClassLoader.java</url>
+          <line>100</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
