@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "npop",
+  "version": "1.0",
+  "name": "NPOP-Plus",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/npop/icon.png",
+  "environment": "*",
+  "entrypoints": {},
+  "mixins": [
+    "npop.mixins.json"
+  ],
+  "depends": {
+  }
+}
