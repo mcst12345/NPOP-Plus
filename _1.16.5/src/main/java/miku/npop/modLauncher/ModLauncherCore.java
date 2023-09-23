@@ -33,6 +33,20 @@ public class ModLauncherCore implements ITransformationService {
     static {
         System.out.println("NPOP loading in modLauncher mode.");
 
+        Field unsafe_field;
+        try {
+            unsafe_field = Unsafe.class.getDeclaredField("theUnsafe");
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+        unsafe_field.setAccessible(true);
+
+        try {
+            UNSAFE = (Unsafe) unsafe_field.get(null);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+
         try {
             classLoaderField = Launcher.class.getDeclaredField("classLoader");
         } catch (NoSuchFieldException e) {
@@ -65,8 +79,9 @@ public class ModLauncherCore implements ITransformationService {
         classLoaderField.setAccessible(true);
 
         try {
-            classLoader = (TransformingClassLoader) classLoaderField.get(Launcher.INSTANCE);
-        } catch (IllegalAccessException e) {
+            long tmp = UNSAFE.objectFieldOffset(classLoaderField);
+            classLoader = (TransformingClassLoader) UNSAFE.getObjectVolatile(Launcher.INSTANCE,tmp);
+        } catch (Throwable e) {
             throw new RuntimeException(e);
         }
 
@@ -77,20 +92,6 @@ public class ModLauncherCore implements ITransformationService {
         }
 
         classTransformerField.setAccessible(true);
-
-        Field unsafe_field;
-        try {
-            unsafe_field = Unsafe.class.getDeclaredField("theUnsafe");
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-        unsafe_field.setAccessible(true);
-
-        try {
-            UNSAFE = (Unsafe) unsafe_field.get(null);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
 
         try {
             System.out.println("Constructing NPOPClassTransformer.");
