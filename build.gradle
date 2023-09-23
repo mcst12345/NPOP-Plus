@@ -9,7 +9,7 @@ version = '1.0-SNAPSHOT'
 
 
 java {
-    archivesBaseName = '!!!MikuLib'
+    archivesBaseName = '!!!NPOP-Plus'
     toolchain.languageVersion = JavaLanguageVersion.of(8)
 }
 
