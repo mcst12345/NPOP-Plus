@@ -10,7 +10,6 @@ import sun.misc.Unsafe;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
@@ -29,7 +28,6 @@ public class ModLauncherCore implements ITransformationService {
     public static final Field classTransformerField;
     public static final Field transformationServicesHandlerField;
     private static final Object Handler;
-    public static final Method findClass;
     public static final Class<?> NPOPTransformationServicesHandlerClass;
 
     public static final TransformingClassLoader classLoader;
@@ -49,8 +47,6 @@ public class ModLauncherCore implements ITransformationService {
             classTransformerField = TransformingClassLoader.class.getDeclaredField("classTransformer");
             transformationServicesHandlerField = Launcher.class.getDeclaredField("transformationServicesHandler");
 
-            findClass = AppClassLoader.getClass().getDeclaredMethod("loadClass",String.class,boolean.class);
-
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
@@ -63,10 +59,8 @@ public class ModLauncherCore implements ITransformationService {
         classTransformerField.setAccessible(true);
         transformationServicesHandlerField.setAccessible(true);
 
-        findClass.setAccessible(true);
-
         try {
-            NPOPTransformationServicesHandlerClass = (Class<?>) findClass.invoke(AppClassLoader,"cpw.mods.modlauncher.NPOPTransformationServicesHandler",true);
+            NPOPTransformationServicesHandlerClass = Class.forName("cpw.mods.modlauncher.NPOPTransformationServicesHandler",true,AppClassLoader);
         } catch (Throwable t){
             throw new RuntimeException(t);
         }
