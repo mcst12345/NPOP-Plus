@@ -132,7 +132,7 @@
       <command value="gradle sync" />
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.npop [build]">
+  <component name="RunManager" selected="Gradle._1.16.5 build">
     <configuration name="_1.16.5 [buildEnvironment]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
