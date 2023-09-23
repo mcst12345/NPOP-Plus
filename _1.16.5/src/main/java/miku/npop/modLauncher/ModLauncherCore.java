@@ -76,6 +76,8 @@ public class ModLauncherCore implements ITransformationService {
             throw new RuntimeException(e);
         }
 
+        classTransformerField.setAccessible(true);
+
         Field unsafe_field;
         try {
             unsafe_field = Unsafe.class.getDeclaredField("theUnsafe");
