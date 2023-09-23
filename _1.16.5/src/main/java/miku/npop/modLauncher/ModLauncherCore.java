@@ -1,9 +1,6 @@
 package miku.npop.modLauncher;
 
-import cpw.mods.modlauncher.ClassTransformer;
-import cpw.mods.modlauncher.Launcher;
-import cpw.mods.modlauncher.NPOPClassTransformer;
-import cpw.mods.modlauncher.TransformingClassLoader;
+import cpw.mods.modlauncher.*;
 import cpw.mods.modlauncher.api.IEnvironment;
 import cpw.mods.modlauncher.api.ITransformationService;
 import cpw.mods.modlauncher.api.ITransformer;
@@ -27,8 +24,11 @@ public class ModLauncherCore implements ITransformationService {
     public static final Field auditTrailField;
     public static final Field classLoaderField;
     public static final Field classTransformerField;
-    public static final NPOPClassTransformer transformer;
+    public static final Field transformationServicesHandlerField;
+    private static final NPOPTransformationServicesHandler Handler;
+
     public static final TransformingClassLoader classLoader;
+    public static final Object transformationServicesHandler;
 
     static {
         System.out.println("NPOP loading in modLauncher mode.");
@@ -36,47 +36,31 @@ public class ModLauncherCore implements ITransformationService {
         Field unsafe_field;
         try {
             unsafe_field = Unsafe.class.getDeclaredField("theUnsafe");
-        } catch (NoSuchFieldException e) {
+            classLoaderField = Launcher.class.getDeclaredField("classLoader");
+            auditTrailField = ClassTransformer.class.getDeclaredField("auditTrail");
+            transformingClassLoaderField = ClassTransformer.class.getDeclaredField("transformingClassLoader");
+            pluginHandlerField = ClassTransformer.class.getDeclaredField("pluginHandler");
+            transformersField = ClassTransformer.class.getDeclaredField("transformers");
+            classTransformerField = TransformingClassLoader.class.getDeclaredField("classTransformer");
+            transformationServicesHandlerField = Launcher.class.getDeclaredField("transformationServicesHandler");
+
+        } catch (Throwable e) {
             throw new RuntimeException(e);
         }
         unsafe_field.setAccessible(true);
-
-        try {
-            UNSAFE = (Unsafe) unsafe_field.get(null);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            classLoaderField = Launcher.class.getDeclaredField("classLoader");
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            auditTrailField = ClassTransformer.class.getDeclaredField("auditTrail");
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            transformingClassLoaderField = ClassTransformer.class.getDeclaredField("transformingClassLoader");
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            pluginHandlerField = ClassTransformer.class.getDeclaredField("pluginHandler");
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            transformersField = ClassTransformer.class.getDeclaredField("transformers");
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
         auditTrailField.setAccessible(true);
         transformingClassLoaderField.setAccessible(true);
         pluginHandlerField.setAccessible(true);
         transformersField.setAccessible(true);
         classLoaderField.setAccessible(true);
+        classTransformerField.setAccessible(true);
+        transformationServicesHandlerField.setAccessible(true);
+
+        try {
+            UNSAFE = (Unsafe) unsafe_field.get(null);
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
 
         try {
             long tmp = UNSAFE.objectFieldOffset(classLoaderField);
@@ -85,30 +69,36 @@ public class ModLauncherCore implements ITransformationService {
             throw new RuntimeException(e);
         }
 
-        try {
-            classTransformerField = TransformingClassLoader.class.getDeclaredField("classTransformer");
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        }
 
-        classTransformerField.setAccessible(true);
+
 
         try {
-            System.out.println("Constructing NPOPClassTransformer.");
-            transformer = new NPOPClassTransformer((ClassTransformer) classTransformerField.get(classLoader));
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+            System.out.println("Getting the original transformationServicesHandler.");
 
-        try {
-            System.out.println("Replacing ClassTransformer in ClassLoader.");
-            long tmp = UNSAFE.objectFieldOffset(classTransformerField);
-            UNSAFE.putObjectVolatile(classLoader,tmp,transformer);
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
+            long temp = UNSAFE.objectFieldOffset(transformationServicesHandlerField);
+            transformationServicesHandler = UNSAFE.getObjectVolatile(Launcher.INSTANCE,temp);
 
-        System.out.println("NPOP loaded.");
+            System.out.println("Constructing NPOPTransformationServicesHandler.");
+
+            long tmp = UNSAFE.objectFieldOffset(NPOPTransformationServicesHandler.transformStoreField);
+            TransformStore transformStore = (TransformStore) UNSAFE.getObjectVolatile(transformationServicesHandler,tmp);
+
+            tmp = UNSAFE.objectFieldOffset(NPOPTransformationServicesHandler.serviceLookupField);
+            Map<String, TransformationServiceDecorator> serviceLookup = (Map<String, TransformationServiceDecorator>) UNSAFE.getObjectVolatile(transformationServicesHandler,tmp);
+
+            tmp = UNSAFE.objectFieldOffset(NPOPTransformationServicesHandler.transformationServicesField);
+            ServiceLoader<ITransformationService> transformationServices = (ServiceLoader<ITransformationService>) UNSAFE.getObjectVolatile(transformationServicesHandler,tmp);
+
+            Handler = new NPOPTransformationServicesHandler(transformStore,serviceLookup,transformationServices);
+
+            System.out.println("NPOPTransformationServicesHandler created. Replacing the original one.");
+
+            UNSAFE.putObjectVolatile(Launcher.INSTANCE,temp,Handler);
+
+            System.out.println("Success. transformationServicesHandler replaced.");
+        }catch (Throwable t){
+            throw new RuntimeException(t);
+        }
     }
     @Nonnull
     @Override
