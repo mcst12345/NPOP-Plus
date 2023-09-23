@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 
 public class ModLauncherCore implements ITransformationService {
     static {
+        System.out.println("NPOP-Plus loading in ModLauncher mode.");
         boolean flag = System.getProperty("NPOP-ModLauncher-Debug") != null;
         if (!flag) {
             if (!Utils.isMacOS()) {
@@ -54,6 +55,7 @@ public class ModLauncherCore implements ITransformationService {
 
 
         if (flag) {
+            System.out.println("Replacing launchPlugins map.");
             try {
                 Field launchPluginsField = Launcher.class.getDeclaredField("launchPlugins");
                 launchPluginsField.setAccessible(true);
@@ -63,6 +65,7 @@ public class ModLauncherCore implements ITransformationService {
                 NPOPPluginMap<String, ILaunchPluginService> fucked = new NPOPPluginMap<>();
                 fucked.putAll(((Map<String, ILaunchPluginService>) launchPluginsField.get(launchPlugins)));
                 launchPluginsField.set(launchPlugins, fucked);
+                System.out.println("Success. NPOP-Plus is loaded.");
             } catch (Throwable e) {
                 throw new RuntimeException(e);
             }

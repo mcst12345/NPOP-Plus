@@ -5,24 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80667ce2-b30e-4419-96cc-933fb109eb1a" name="更改" comment="commit">
-      <change afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/PreMain.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/Utils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/hack/LinuxHack.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/hack/WindowsHack.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/modLauncher/NPOPPlugin.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/modLauncher/NPOPPluginMap.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/miku/npop/FMLAccessTransformer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/miku/npop/Utils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/miku/npop/hack/LinuxHack.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/miku/npop/hack/WindowsHack.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/WindowsVirtualMachine" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_1.16.5/src/main/java/cpw/mods/modlauncher/NPOPClassTransformer.java" beforeDir="false" afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/AccessTransformer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_1.16.5/src/main/java/cpw/mods/modlauncher/NPOPTransformationServicesHandler.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/modLauncher/ModLauncherCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/modLauncher/ModLauncherCore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/miku/npop/AccessTransformer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/miku/npop/AccessTransformer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/miku/npop/FMLCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/miku/npop/FMLCore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/miku/npop/PreMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/miku/npop/PreMain.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,6 +45,21 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="_1.16.5" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="npop" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="npop" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="npop" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="build" type="c8890929:TasksNode$1" />
               </path>
@@ -133,7 +132,7 @@
       <command value="gradle sync" />
     </option>
   </component>
-  <component name="RunManager" selected="Gradle._1.16.5 build">
+  <component name="RunManager" selected="Gradle.npop [build]">
     <configuration name="_1.16.5 [buildEnvironment]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -429,13 +428,26 @@
       <option name="project" value="LOCAL" />
       <updated>1695466137632</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="commit">
+      <option name="closed" value="true" />
+      <created>1695476014098</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1695476014098</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="commit" />
     <option name="LAST_COMMIT_MESSAGE" value="commit" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
