@@ -31,6 +31,7 @@ public class ModLauncherCore implements ITransformationService {
     public static final TransformingClassLoader classLoader;
 
     static {
+        System.out.println("NPOP loading in modLauncher mode.");
 
         try {
             classLoaderField = Launcher.class.getDeclaredField("classLoader");
@@ -90,17 +91,21 @@ public class ModLauncherCore implements ITransformationService {
         }
 
         try {
+            System.out.println("Constructing NPOPClassTransformer.");
             transformer = new NPOPClassTransformer((ClassTransformer) classTransformerField.get(classLoader));
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
 
         try {
+            System.out.println("Replacing ClassTransformer in ClassLoader.");
             long tmp = UNSAFE.objectFieldOffset(classTransformerField);
             UNSAFE.putObjectVolatile(classLoader,tmp,transformer);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
+
+        System.out.println("NPOP loaded.");
     }
     @Nonnull
     @Override
@@ -141,7 +146,7 @@ public class ModLauncherCore implements ITransformationService {
     @Nonnull
     @Override
     public List<ITransformer> transformers() {
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 
     @Override
