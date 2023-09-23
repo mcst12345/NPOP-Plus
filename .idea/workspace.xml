@@ -5,8 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80667ce2-b30e-4419-96cc-933fb109eb1a" name="更改" comment="commit">
+      <change afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/PreMain.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/Utils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/hack/LinuxHack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/hack/WindowsHack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/modLauncher/NPOPPlugin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/modLauncher/NPOPPluginMap.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/miku/npop/FMLAccessTransformer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/miku/npop/Utils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/miku/npop/hack/LinuxHack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/miku/npop/hack/WindowsHack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/WindowsVirtualMachine" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_1.16.5/src/main/java/cpw/mods/modlauncher/NPOPClassTransformer.java" beforeDir="false" afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/AccessTransformer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_1.16.5/src/main/java/cpw/mods/modlauncher/NPOPTransformationServicesHandler.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/modLauncher/ModLauncherCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/modLauncher/ModLauncherCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/miku/npop/AccessTransformer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/miku/npop/AccessTransformer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/miku/npop/FMLCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/miku/npop/FMLCore.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/miku/npop/PreMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/miku/npop/PreMain.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,21 +64,6 @@
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="build" type="c8890929:TasksNode$1" />
               </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="npop" type="f1a62948:ProjectNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="npop" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="npop" type="f1a62948:ProjectNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="build" type="c8890929:TasksNode$1" />
-              </path>
             </expand>
             <select />
           </tree_state>
@@ -94,22 +95,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
-    "jdk.selected.JAVA_MODULE": "1.8",
-    "jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": "1.8",
-    "last_opened_file_path": "/root/IdeaProjects/npop/src/main/resources",
-    "project.structure.last.edited": "模块",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.42371404",
-    "settings.editor.selected.configurable": "http.proxy"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;JavaClassFindUsagesOptions.isDerivedInterfaces&quot;: &quot;true&quot;,
+    &quot;JavaClassFindUsagesOptions.isImplementingClasses&quot;: &quot;true&quot;,
+    &quot;JavaClassFindUsagesOptions.isSearchForTextOccurrences&quot;: &quot;false&quot;,
+    &quot;JavaClassFindUsagesOptions.isUsages&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;1.8&quot;,
+    &quot;jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk&quot;: &quot;1.8&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/root/IdeaProjects/npop/src/main/resources&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;模块&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.42371404&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;http.proxy&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources" />
@@ -118,6 +123,7 @@
       <recent name="cpw.mods.modlauncher" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="miku.npop" />
       <recent name="net.minecraft.launchwrapper.injector" />
       <recent name="net.minecraft.launchwrapper" />
     </key>
@@ -415,7 +421,15 @@
       <option name="project" value="LOCAL" />
       <updated>1695461367329</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="commit">
+      <option name="closed" value="true" />
+      <created>1695466137632</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1695466137632</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -434,6 +448,12 @@
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-field">
+          <url>jrt:///usr/lib/jvm/java-11-openjdk!/java.base/jdk/internal/loader/ClassLoaders.class</url>
+          <line>64</line>
+          <properties field="ucp" class="jdk.internal.loader.ClassLoaders.AppClassLoader" />
+          <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

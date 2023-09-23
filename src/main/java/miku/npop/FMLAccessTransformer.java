@@ -1,5 +1,6 @@
 package miku.npop;
 
+import net.minecraft.launchwrapper.IClassTransformer;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -7,28 +8,27 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.lang.instrument.ClassFileTransformer;
-import java.security.ProtectionDomain;
-
 import static java.lang.reflect.Modifier.*;
 
-public class AccessTransformer implements ClassFileTransformer {
+public class FMLAccessTransformer implements IClassTransformer {
+    public static final FMLAccessTransformer INSTANCE = new FMLAccessTransformer();
     private boolean loaded;
+
+    private FMLAccessTransformer() {
+    }
+
     @Override
-    @Nonnull
-    public byte[] transform(@Nullable ClassLoader classLoader, String s,@Nullable Class<?> aClass,@Nullable ProtectionDomain protectionDomain, byte[] bytes) {
+    public byte[] transform(String name, String transformedName, byte[] basicClass) {
         if (!loaded) {
             loaded = true;
-            System.out.println("AccessTransformer is running.");
+            System.out.println("AccessTransformer is running. (FMLCoreMod)");
         }
         try {
-            ClassReader cr = new ClassReader(bytes);
+            ClassReader cr = new ClassReader(basicClass);
             ClassNode cn = new ClassNode();
             cr.accept(cn, 0);
             if (isInterface(cn.access)) {
-                return bytes;
+                return basicClass;
             }
             for (FieldNode fn : cn.fields) {
                 if (fn.name.equals("$VALUES")) continue;
@@ -67,8 +67,8 @@ public class AccessTransformer implements ClassFileTransformer {
             cn.accept(cw);
             return cw.toByteArray();
 
-        } catch (Throwable t){
-            return bytes;
+        } catch (Throwable t) {
+            return basicClass;
         }
     }
 }

@@ -1,83 +1,66 @@
 package miku.npop;
 
+import miku.npop.hack.LinuxHack;
+import miku.npop.hack.WindowsHack;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.MethodNode;
+import sun.instrument.InstrumentationImpl;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
-import static java.lang.reflect.Modifier.*;
+public class FMLCore implements IFMLLoadingPlugin {
+    static {
+        boolean flag = false;
 
-public class FMLCore implements IFMLLoadingPlugin, IClassTransformer {
-    @SuppressWarnings("unchecked")
-    public FMLCore() throws NoSuchFieldException, IllegalAccessException {
         System.out.println("NPOP loading as FMLLoadingPlugin.");
-        Field transformers = LaunchClassLoader.class.getDeclaredField("transformers");
-        transformers.setAccessible(true);
-        ((List<IClassTransformer>)transformers.get(Launch.classLoader)).add(this);
-        transformers.setAccessible(false);
-        System.out.println("Success.");
-    }
-    @Override
-    public byte[] transform(String name, String transformedName, byte[] basicClass) {
-        try {
-            ClassReader cr = new ClassReader(basicClass);
-            ClassNode cn = new ClassNode();
-            cr.accept(cn,0);
-            if(isInterface(cn.access)){
-                return basicClass;
+
+        if (!Utils.isMacOS()) {
+            System.out.println("Try to get the InstrumentationImpl.");
+            try {
+                InstrumentationImpl instrumentation;
+                if (Utils.isWindows()) {
+                    Field loadedLibraryNames_field = ClassLoader.class.getDeclaredField("loadedLibraryNames");
+                    loadedLibraryNames_field.setAccessible(true);
+                    ((Vector<String>) loadedLibraryNames_field.get(null)).removeIf(s -> s.contains("attach"));
+                    instrumentation = (InstrumentationImpl) WindowsHack.Hack();
+                    instrumentation.addTransformer(PreMain.AT);
+                } else {
+                    System.out.println("Guess you are on Linux.");
+                    instrumentation = (InstrumentationImpl) LinuxHack.hack();
+                    instrumentation.addTransformer(PreMain.AT);
+                }
+                System.out.println("Successfully get the InstrumentationImpl and add our transformer.");
+                flag = true;
+            } catch (Throwable t) {
+                System.out.println("Failed to get InstrumentationImpl. Fallback to forgeCoreMod.");
             }
-            for (FieldNode fn : cn.fields) {
-                if (fn.name.equals("$VALUES")) continue;
+        } else {
+            System.out.println("We are on MacOS. Fallback to forgeCoreMod.");
+            flag = true;
+        }
 
-                if (isPrivate(fn.access)) {
-                    fn.access &= ~Opcodes.ACC_PRIVATE;
-                    fn.access |= Opcodes.ACC_PUBLIC;
-                }
-                if (isProtected(fn.access)) {
-                    fn.access &= ~Opcodes.ACC_PROTECTED;
-                    fn.access |= Opcodes.ACC_PUBLIC;
-                }
-                if (isFinal(fn.access)) {
-                    fn.access &= ~Opcodes.ACC_FINAL;
-                }
-
-            }
-
-            for (MethodNode mn : cn.methods) {
-                if (mn.name.equals("<clinit>")) continue;
-
-                if (isPrivate(mn.access)) {
-                    mn.access &= ~Opcodes.ACC_PRIVATE;
-                    mn.access |= Opcodes.ACC_PUBLIC;
-                }
-                if (isProtected(mn.access)) {
-                    mn.access &= ~Opcodes.ACC_PROTECTED;
-                    mn.access |= Opcodes.ACC_PUBLIC;
-                }
-                if (isFinal(mn.access)) {
-                    mn.access &= ~Opcodes.ACC_FINAL;
-                }
+        if (flag) {
+            System.out.println("Adding transformer to LaunchClassLoader.");
+            try {
+                Field transformers = LaunchClassLoader.class.getDeclaredField("transformers");
+                transformers.setAccessible(true);
+                ((List<IClassTransformer>) transformers.get(Launch.classLoader)).add(FMLAccessTransformer.INSTANCE);
+                transformers.setAccessible(false);
+            } catch (Throwable t) {
+                throw new RuntimeException(t);
             }
 
-            ClassWriter cw = new ClassWriter(0);
-            cn.accept(cw);
-            return cw.toByteArray();
-
-        } catch (Throwable t){
-            return basicClass;
+            System.out.println("Success.");
         }
     }
+
+
 
     @Override
     public String[] getASMTransformerClass() {

@@ -1,14 +1,19 @@
 package miku.npop.modLauncher;
 
-import cpw.mods.modlauncher.*;
+import cpw.mods.modlauncher.LaunchPluginHandler;
+import cpw.mods.modlauncher.Launcher;
 import cpw.mods.modlauncher.api.IEnvironment;
 import cpw.mods.modlauncher.api.ITransformationService;
 import cpw.mods.modlauncher.api.ITransformer;
+import cpw.mods.modlauncher.serviceapi.ILaunchPluginService;
 import joptsimple.OptionSpecBuilder;
-import sun.misc.Unsafe;
+import miku.npop.AccessTransformer;
+import miku.npop.Utils;
+import miku.npop.hack.LinuxHack;
+import miku.npop.hack.WindowsHack;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.Constructor;
+import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.file.Path;
@@ -18,97 +23,49 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ModLauncherCore implements ITransformationService {
-    public static final ClassLoader AppClassLoader = Launcher.class.getClassLoader();
-    public static final Unsafe UNSAFE;
-    public static final Field transformersField;
-    public static final Field pluginHandlerField;
-    public static final Field transformingClassLoaderField;
-    public static final Field auditTrailField;
-    public static final Field classLoaderField;
-    public static final Field classTransformerField;
-    public static final Field transformationServicesHandlerField;
-    private static final Object Handler;
-    public static final Class<?> NPOPTransformationServicesHandlerClass;
-
-    public static final TransformingClassLoader classLoader;
-    public static final Object transformationServicesHandler;
-
     static {
-        System.out.println("NPOP loading in modLauncher mode.");
-
-        Field unsafe_field;
-        try {
-            unsafe_field = Unsafe.class.getDeclaredField("theUnsafe");
-            classLoaderField = Launcher.class.getDeclaredField("classLoader");
-            auditTrailField = ClassTransformer.class.getDeclaredField("auditTrail");
-            transformingClassLoaderField = ClassTransformer.class.getDeclaredField("transformingClassLoader");
-            pluginHandlerField = ClassTransformer.class.getDeclaredField("pluginHandler");
-            transformersField = ClassTransformer.class.getDeclaredField("transformers");
-            classTransformerField = TransformingClassLoader.class.getDeclaredField("classTransformer");
-            transformationServicesHandlerField = Launcher.class.getDeclaredField("transformationServicesHandler");
-
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-        unsafe_field.setAccessible(true);
-        auditTrailField.setAccessible(true);
-        transformingClassLoaderField.setAccessible(true);
-        pluginHandlerField.setAccessible(true);
-        transformersField.setAccessible(true);
-        classLoaderField.setAccessible(true);
-        classTransformerField.setAccessible(true);
-        transformationServicesHandlerField.setAccessible(true);
-
-        try {
-            NPOPTransformationServicesHandlerClass = Class.forName("cpw.mods.modlauncher.NPOPTransformationServicesHandler",true,AppClassLoader);
-        } catch (Throwable t){
-            throw new RuntimeException(t);
-        }
-
-        try {
-            UNSAFE = (Unsafe) unsafe_field.get(null);
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            long tmp = UNSAFE.objectFieldOffset(classLoaderField);
-            classLoader = (TransformingClassLoader) UNSAFE.getObjectVolatile(Launcher.INSTANCE,tmp);
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
+        boolean flag = System.getProperty("NPOP-ModLauncher-Debug") != null;
+        if (!flag) {
+            if (!Utils.isMacOS()) {
+                System.out.println("Try to get the InstrumentationImpl.");
+                try {
+                    Instrumentation instrumentation;
+                    if (Utils.isWindows()) {
+                        Field loadedLibraryNames_field = ClassLoader.class.getDeclaredField("loadedLibraryNames");
+                        loadedLibraryNames_field.setAccessible(true);
+                        ((Vector<String>) loadedLibraryNames_field.get(null)).removeIf(s -> s.contains("attach"));
+                        instrumentation = (Instrumentation) WindowsHack.Hack();
+                        instrumentation.addTransformer(new AccessTransformer());
+                    } else {
+                        System.out.println("Guess you are on Linux.");
+                        instrumentation = (Instrumentation) LinuxHack.hack();
+                        instrumentation.addTransformer(new AccessTransformer());
+                    }
+                    System.out.println("Successfully get the InstrumentationImpl and add our transformer.");
+                } catch (Throwable t) {
+                    System.out.println("Failed to get InstrumentationImpl. Fallback to forgeCoreMod.");
+                    flag = true;
+                }
+            } else {
+                System.out.println("We are on MacOS. Fallback to forgeCoreMod.");
+                flag = true;
+            }
         }
 
 
-
-
-        try {
-            System.out.println("Getting the original transformationServicesHandler.");
-
-            long temp = UNSAFE.objectFieldOffset(transformationServicesHandlerField);
-            transformationServicesHandler = UNSAFE.getObjectVolatile(Launcher.INSTANCE,temp);
-
-            System.out.println("Constructing NPOPTransformationServicesHandler.");
-
-            long tmp = UNSAFE.objectFieldOffset((Field) NPOPTransformationServicesHandlerClass.getField("transformStoreField").get(null));
-            TransformStore transformStore = (TransformStore) UNSAFE.getObjectVolatile(transformationServicesHandler,tmp);
-
-            tmp = UNSAFE.objectFieldOffset((Field) NPOPTransformationServicesHandlerClass.getField("serviceLookupField").get(null));
-            Map<String, TransformationServiceDecorator> serviceLookup = (Map<String, TransformationServiceDecorator>) UNSAFE.getObjectVolatile(transformationServicesHandler,tmp);
-
-            tmp = UNSAFE.objectFieldOffset((Field) NPOPTransformationServicesHandlerClass.getField("transformationServicesField").get(null));
-            ServiceLoader<ITransformationService> transformationServices = (ServiceLoader<ITransformationService>) UNSAFE.getObjectVolatile(transformationServicesHandler,tmp);
-
-            Constructor<?> constructor = NPOPTransformationServicesHandlerClass.getConstructor(TransformStore.class,Map.class,ServiceLoader.class);
-
-            Handler = constructor.newInstance(transformStore,serviceLookup,transformationServices);
-
-            System.out.println("NPOPTransformationServicesHandler created. Replacing the original one.");
-
-            UNSAFE.putObjectVolatile(Launcher.INSTANCE,temp,Handler);
-
-            System.out.println("Success. transformationServicesHandler replaced.");
-        }catch (Throwable t){
-            throw new RuntimeException(t);
+        if (flag) {
+            try {
+                Field launchPluginsField = Launcher.class.getDeclaredField("launchPlugins");
+                launchPluginsField.setAccessible(true);
+                Object launchPlugins = launchPluginsField.get(Launcher.INSTANCE);
+                launchPluginsField = LaunchPluginHandler.class.getDeclaredField("plugins");
+                launchPluginsField.setAccessible(true);
+                NPOPPluginMap<String, ILaunchPluginService> fucked = new NPOPPluginMap<>();
+                fucked.putAll(((Map<String, ILaunchPluginService>) launchPluginsField.get(launchPlugins)));
+                launchPluginsField.set(launchPlugins, fucked);
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
         }
     }
     @Nonnull
@@ -161,5 +118,19 @@ public class ModLauncherCore implements ITransformationService {
     @Override
     public Map.Entry<Set<String>, Supplier<Function<String, Optional<URL>>>> additionalResourcesLocator() {
         return ITransformationService.super.additionalResourcesLocator();
+    }
+
+    //From ClassLoaderUtils by LXGaming.
+    //Licensed under Apache2.0.
+    private static Field getField(Field[] fields, @Nonnull String... names) throws NoSuchFieldException {
+        for (Field field : fields) {
+            for (String name : names) {
+                if (field.getName().equals(name)) {
+                    return field;
+                }
+            }
+        }
+
+        throw new NoSuchFieldException(String.join(", ", names));
     }
 }

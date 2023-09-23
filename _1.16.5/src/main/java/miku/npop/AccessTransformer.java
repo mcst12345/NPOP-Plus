@@ -1,6 +1,5 @@
-package cpw.mods.modlauncher;
+package miku.npop;
 
-import miku.npop.modLauncher.ModLauncherCore;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -8,22 +7,29 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.instrument.ClassFileTransformer;
+import java.security.ProtectionDomain;
+
 import static java.lang.reflect.Modifier.*;
 
-public class NPOPClassTransformer extends ClassTransformer {
-    public NPOPClassTransformer(ClassTransformer source) throws IllegalAccessException {
-        super((TransformStore) ModLauncherCore.transformersField.get(source), (LaunchPluginHandler) ModLauncherCore.pluginHandlerField.get(source), (TransformingClassLoader) ModLauncherCore.transformingClassLoaderField.get(source), (TransformerAuditTrail) ModLauncherCore.auditTrailField.get(source));
-    }
+public class AccessTransformer implements ClassFileTransformer {
+    private boolean loaded;
 
     @Override
-    byte[] transform(byte[] inputClass, String className, final String reason){
-        byte[] clazz = super.transform(inputClass,className,reason);
+    @Nonnull
+    public byte[] transform(@Nullable ClassLoader classLoader, String s, @Nullable Class<?> aClass, @Nullable ProtectionDomain protectionDomain, byte[] bytes) {
+        if (!loaded) {
+            loaded = true;
+            System.out.println("AccessTransformer is running.");
+        }
         try {
-            ClassReader cr = new ClassReader(clazz);
+            ClassReader cr = new ClassReader(bytes);
             ClassNode cn = new ClassNode();
-            cr.accept(cn,0);
-            if(isInterface(cn.access)){
-                return clazz;
+            cr.accept(cn, 0);
+            if (isInterface(cn.access)) {
+                return bytes;
             }
             for (FieldNode fn : cn.fields) {
                 if (fn.name.equals("$VALUES")) continue;
@@ -63,7 +69,7 @@ public class NPOPClassTransformer extends ClassTransformer {
             return cw.toByteArray();
 
         } catch (Throwable t){
-            return clazz;
+            return bytes;
         }
     }
 }
