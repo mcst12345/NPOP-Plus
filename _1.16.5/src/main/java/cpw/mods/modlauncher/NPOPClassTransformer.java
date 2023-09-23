@@ -12,7 +12,7 @@ import static java.lang.reflect.Modifier.*;
 
 public class NPOPClassTransformer extends ClassTransformer {
     public NPOPClassTransformer(ClassTransformer source) throws IllegalAccessException {
-        super((TransformStore) ModLauncherCore.transformers.get(source), (LaunchPluginHandler) ModLauncherCore.pluginHandler.get(source), (TransformingClassLoader) ModLauncherCore.transformingClassLoader.get(source), (TransformerAuditTrail) ModLauncherCore.auditTrail.get(source));
+        super((TransformStore) ModLauncherCore.transformersField.get(source), (LaunchPluginHandler) ModLauncherCore.pluginHandlerField.get(source), (TransformingClassLoader) ModLauncherCore.transformingClassLoaderField.get(source), (TransformerAuditTrail) ModLauncherCore.auditTrailField.get(source));
     }
 
     @Override
