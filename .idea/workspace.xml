@@ -5,18 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80667ce2-b30e-4419-96cc-933fb109eb1a" name="更改" comment="commit">
-      <change afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/AccessTransformer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/PreMain.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/Utils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/hack/LinuxHack.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/hack/WindowsHack.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/fabric/NPOPPreLaunch.java" beforeDir="false" afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/fabric/NPOPPreLaunch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_fabric/src/main/resources/npop.mixins.json" beforeDir="false" afterPath="$PROJECT_DIR$/_fabric/src/main/resources/npop.mixins.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/AlphaVanillaTweaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/AlphaVanillaTweaker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/IndevVanillaTweaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/IndevVanillaTweaker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/Launch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/Launch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/VanillaTweaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/VanillaTweaker.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +42,17 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="_fabric" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="_fabric" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="_fabric" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
@@ -144,7 +145,7 @@
       <command value="gradle sync" />
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.npop [build]">
+  <component name="RunManager" selected="Gradle._fabric build">
     <configuration name="_1.16.5 [buildEnvironment]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -510,7 +511,15 @@
       <option name="project" value="LOCAL" />
       <updated>1695529942347</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="commit">
+      <option name="closed" value="true" />
+      <created>1695534391194</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1695534391194</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

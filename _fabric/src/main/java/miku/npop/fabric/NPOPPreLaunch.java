@@ -48,8 +48,14 @@ public class NPOPPreLaunch implements PreLaunchEntrypoint {
         }
 
         if (flag) {
+
             try {
+                Field loadedLibraryNames_field = ClassLoader.class.getDeclaredField("loadedLibraryNames");
+                loadedLibraryNames_field.setAccessible(true);
+                ((Vector<String>) loadedLibraryNames_field.get(null)).removeIf(s -> s.contains("attach"));
                 System.loadLibrary("attach");
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
             } catch (Throwable ignored) {
             }
             String pid;
