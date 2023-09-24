@@ -44,9 +44,9 @@ public class NPOPPreLaunch implements PreLaunchEntrypoint {
                         instrumentation.addTransformer(PreMain.AT);
                     }
                     System.out.println("Successfully get the InstrumentationImpl and add our transformer.");
-                    flag = true;
                 } catch (Throwable t) {
                     System.out.println("Failed to get InstrumentationImpl. Fallback to attach api.");
+                    flag = true;
                 }
             } else {
                 System.out.println("We are on MacOS. Trying the attach api.");
