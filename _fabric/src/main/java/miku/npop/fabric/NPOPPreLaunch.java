@@ -9,11 +9,13 @@ import miku.npop.Utils;
 import miku.npop.hack.LinuxHack;
 import miku.npop.hack.WindowsHack;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
+import net.fabricmc.loader.impl.launch.knot.Knot;
 
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
+import java.util.Set;
 import java.util.Vector;
 
 public class NPOPPreLaunch implements PreLaunchEntrypoint {
@@ -50,11 +52,14 @@ public class NPOPPreLaunch implements PreLaunchEntrypoint {
         if (flag) {
 
             try {
-                Field loadedLibraryNames_field = ClassLoader.class.getDeclaredField("loadedLibraryNames");
-                loadedLibraryNames_field.setAccessible(true);
-                ((Vector<String>) loadedLibraryNames_field.get(null)).removeIf(s -> s.contains("attach"));
+                Field librariesField = ClassLoader.class.getDeclaredField("libraries");
+                long tmp = Utils.getUnsafe().objectFieldOffset(librariesField);
+                Object libraries = Utils.getUnsafe().getObjectVolatile(Knot.class.getClassLoader(), tmp);
+                Field loadedLibraryNamesField = libraries.getClass().getDeclaredField("loadedLibraryNames");
+                tmp = Utils.getUnsafe().objectFieldOffset(loadedLibraryNamesField);
+                ((Set<String>) Utils.getUnsafe().getObjectVolatile(libraries, tmp)).removeIf(s -> s.contains("attach"));
                 System.loadLibrary("attach");
-            } catch (NoSuchFieldException | IllegalAccessException e) {
+            } catch (NoSuchFieldException e) {
                 throw new RuntimeException(e);
             } catch (Throwable ignored) {
             }
