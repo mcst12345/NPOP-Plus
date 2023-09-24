@@ -5,9 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80667ce2-b30e-4419-96cc-933fb109eb1a" name="更改" comment="commit">
-      <change afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/fabric/NPOPPreLaunch.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/AccessTransformer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/PreMain.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/Utils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/hack/LinuxHack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/hack/WindowsHack.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_fabric/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/_fabric/src/main/resources/fabric.mod.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/fabric/NPOPPreLaunch.java" beforeDir="false" afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/fabric/NPOPPreLaunch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_fabric/src/main/resources/npop.mixins.json" beforeDir="false" afterPath="$PROJECT_DIR$/_fabric/src/main/resources/npop.mixins.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/AlphaVanillaTweaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/AlphaVanillaTweaker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/IndevVanillaTweaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/IndevVanillaTweaker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/Launch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/Launch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/VanillaTweaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/VanillaTweaker.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,8 +109,9 @@
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "JavaClassFindUsagesOptions.isDerivedInterfaces": "true",
     "JavaClassFindUsagesOptions.isImplementingClasses": "true",
-    "JavaClassFindUsagesOptions.isSearchForTextOccurrences": "false",
-    "JavaClassFindUsagesOptions.isUsages": "false",
+    "JavaClassFindUsagesOptions.isMethodsUsages": "true",
+    "JavaMethodFindUsagesOptions.isImplementingMethods": "true",
+    "JavaMethodFindUsagesOptions.isSearchForTextOccurrences": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -124,6 +134,7 @@
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="miku.npop" />
+      <recent name="miku.npop.hack" />
       <recent name="net.minecraft.launchwrapper.injector" />
       <recent name="net.minecraft.launchwrapper" />
     </key>
@@ -491,7 +502,15 @@
       <option name="project" value="LOCAL" />
       <updated>1695486332477</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="commit">
+      <option name="closed" value="true" />
+      <created>1695529942347</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1695529942347</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -521,6 +540,16 @@
           <line>64</line>
           <properties field="ucp" class="jdk.internal.loader.ClassLoaders.AppClassLoader" />
           <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/LaunchClassLoader.java</url>
+          <line>379</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/LaunchClassLoader.java</url>
+          <line>322</line>
+          <option name="timeStamp" value="8" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

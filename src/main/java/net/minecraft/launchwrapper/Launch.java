@@ -26,7 +26,7 @@ public class Launch {
         System.out.println("NPOP loaded as LaunchWrapper.");
         final URLClassLoader ucl = (URLClassLoader) getClass().getClassLoader();
         classLoader = new LaunchClassLoader(ucl.getURLs());
-        blackboard = new HashMap<String,Object>();
+        blackboard = new HashMap<>();
         Thread.currentThread().setContextClassLoader(classLoader);
     }
 
@@ -44,9 +44,9 @@ public class Launch {
         minecraftHome = options.valueOf(gameDirOption);
         assetsDir = options.valueOf(assetsDirOption);
         final String profileName = options.valueOf(profileOption);
-        final List<String> tweakClassNames = new ArrayList<String>(options.valuesOf(tweakClassOption));
+        final List<String> tweakClassNames = new ArrayList<>(options.valuesOf(tweakClassOption));
 
-        final List<String> argumentList = new ArrayList<String>();
+        final List<String> argumentList = new ArrayList<>();
         // This list of names will be interacted with through tweakers. They can append to this list
         // any 'discovered' tweakers from their preferred mod loading mechanism
         // By making this object discoverable and accessible it's possible to perform
@@ -122,7 +122,7 @@ public class Launch {
             // Finally we turn to the primary tweaker, and let it tell us where to go to launch
             final String launchTarget = primaryTweaker.getLaunchTarget();
             final Class<?> clazz = Class.forName(launchTarget, false, classLoader);
-            final Method mainMethod = clazz.getMethod("main", new Class[]{String[].class});
+            final Method mainMethod = clazz.getMethod("main", String[].class);
 
             LogWrapper.info("Launching wrapped minecraft {%s}", launchTarget);
             mainMethod.invoke(null, (Object) argumentList.toArray(new String[argumentList.size()]));
