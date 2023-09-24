@@ -9,14 +9,12 @@ import miku.npop.Utils;
 import miku.npop.hack.LinuxHack;
 import miku.npop.hack.WindowsHack;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
-import net.fabricmc.loader.impl.launch.knot.Knot;
 
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
 import java.util.Set;
-import java.util.Vector;
 
 public class NPOPPreLaunch implements PreLaunchEntrypoint {
     static {
@@ -27,15 +25,20 @@ public class NPOPPreLaunch implements PreLaunchEntrypoint {
         if (!Utils.isMacOS()) {
             System.out.println("Try to get the InstrumentationImpl.");
             try {
+                Field module = Class.class.getDeclaredField("module");
+                long offset = Utils.getUnsafe().objectFieldOffset(module);
                 Instrumentation instrumentation;
                 if (Utils.isWindows()) {
-                    Field loadedLibraryNames_field = ClassLoader.class.getDeclaredField("loadedLibraryNames");
-                    loadedLibraryNames_field.setAccessible(true);
-                    ((Vector<String>) loadedLibraryNames_field.get(null)).removeIf(s -> s.contains("attach"));
+                    Class<?> clazz = Class.forName("jdk.internal.loader.NativeLibraries");
+                    Field loadedLibraryNamesField = clazz.getDeclaredField("loadedLibraryNames");
+                    ((Set<String>) Utils.getUnsafe().staticFieldBase(loadedLibraryNamesField)).removeIf(s -> s.contains("attach"));
+                    Utils.getUnsafe().putObject(WindowsHack.class, offset, Object.class.getModule());
                     instrumentation = (Instrumentation) WindowsHack.Hack();
+
                     instrumentation.addTransformer(PreMain.AT);
                 } else {
                     System.out.println("Guess you are on Linux.");
+                    Utils.getUnsafe().putObject(LinuxHack.class, offset, Object.class.getModule());
                     instrumentation = (Instrumentation) LinuxHack.hack();
                     instrumentation.addTransformer(PreMain.AT);
                 }
@@ -52,12 +55,9 @@ public class NPOPPreLaunch implements PreLaunchEntrypoint {
         if (flag) {
 
             try {
-                Field librariesField = ClassLoader.class.getDeclaredField("libraries");
-                long tmp = Utils.getUnsafe().objectFieldOffset(librariesField);
-                Object libraries = Utils.getUnsafe().getObjectVolatile(Knot.class.getClassLoader(), tmp);
-                Field loadedLibraryNamesField = libraries.getClass().getDeclaredField("loadedLibraryNames");
-                tmp = Utils.getUnsafe().objectFieldOffset(loadedLibraryNamesField);
-                ((Set<String>) Utils.getUnsafe().getObjectVolatile(libraries, tmp)).removeIf(s -> s.contains("attach"));
+                Class<?> clazz = Class.forName("jdk.internal.loader.NativeLibraries");
+                Field loadedLibraryNamesField = clazz.getDeclaredField("loadedLibraryNames");
+                ((Set<String>) Utils.getUnsafe().staticFieldBase(loadedLibraryNamesField)).removeIf(s -> s.contains("attach"));
                 System.loadLibrary("attach");
             } catch (NoSuchFieldException e) {
                 throw new RuntimeException(e);
@@ -74,6 +74,8 @@ public class NPOPPreLaunch implements PreLaunchEntrypoint {
                 VirtualMachine vm = VirtualMachine.attach(pid);
                 vm.loadAgent(PreMain.class.getProtectionDomain().getCodeSource().getLocation().getPath());
             } catch (AttachNotSupportedException | IOException | AgentLoadException | AgentInitializationException e) {
+                System.out.println("Attaching failed! Try to add \"-Djdk.attach.allowAttachSelf=true\" to your launch arguments.");
+                System.out.println("If this doesn't work,try to run NPOP-Plus in javaagent mode.");
                 throw new RuntimeException(e);
             }
         }
