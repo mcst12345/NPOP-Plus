@@ -7,9 +7,12 @@
   "authors": [],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/npop/icon.png",
   "environment": "*",
-  "entrypoints": {},
+  "entrypoints": {
+    "preLaunch": [
+      "miku.npop.fabric.NPOPPreLaunch"
+    ]
+  },
   "mixins": [
     "npop.mixins.json"
   ],

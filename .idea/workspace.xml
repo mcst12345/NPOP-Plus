@@ -5,20 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80667ce2-b30e-4419-96cc-933fb109eb1a" name="更改" comment="commit">
-      <change afterPath="$PROJECT_DIR$/_fabric/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_fabric/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_fabric/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_fabric/gradle.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_fabric/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_fabric/settings.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_fabric/src/main/resources/fabric.mod.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_fabric/src/main/resources/npop.mixins.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/fabric/NPOPPreLaunch.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_fabric/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/_fabric/src/main/resources/fabric.mod.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,7 +109,7 @@
     "jdk.selected.JAVA_MODULE": "1.8",
     "jdk.selected.com.intellij.ui.dsl.builder.impl.RowImpl.sdk": "1.8",
     "last_opened_file_path": "/root/IdeaProjects/npop/src/main/resources",
-    "project.structure.last.edited": "项目",
+    "project.structure.last.edited": "模块",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.42371404",
     "settings.editor.selected.configurable": "http.proxy"
@@ -494,7 +483,15 @@
       <option name="project" value="LOCAL" />
       <updated>1695481013912</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="commit">
+      <option name="closed" value="true" />
+      <created>1695486332477</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1695486332477</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
