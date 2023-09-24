@@ -22,34 +22,36 @@ public class NPOPPreLaunch implements PreLaunchEntrypoint {
 
         boolean flag = System.getProperty("NPOP-Plus-Attach-Debug") != null;
 
-        if (!Utils.isMacOS()) {
-            System.out.println("Try to get the InstrumentationImpl.");
-            try {
-                Field module = Class.class.getDeclaredField("module");
-                long offset = Utils.getUnsafe().objectFieldOffset(module);
-                Instrumentation instrumentation;
-                if (Utils.isWindows()) {
-                    Class<?> clazz = Class.forName("jdk.internal.loader.NativeLibraries");
-                    Field loadedLibraryNamesField = clazz.getDeclaredField("loadedLibraryNames");
-                    ((Set<String>) Utils.getUnsafe().staticFieldBase(loadedLibraryNamesField)).removeIf(s -> s.contains("attach"));
-                    Utils.getUnsafe().putObject(WindowsHack.class, offset, Object.class.getModule());
-                    instrumentation = (Instrumentation) WindowsHack.Hack();
+        if (!flag) {
+            if (!Utils.isMacOS()) {
+                System.out.println("Try to get the InstrumentationImpl.");
+                try {
+                    Field module = Class.class.getDeclaredField("module");
+                    long offset = Utils.getUnsafe().objectFieldOffset(module);
+                    Instrumentation instrumentation;
+                    if (Utils.isWindows()) {
+                        Class<?> clazz = Class.forName("jdk.internal.loader.NativeLibraries");
+                        Field loadedLibraryNamesField = clazz.getDeclaredField("loadedLibraryNames");
+                        ((Set<String>) Utils.getUnsafe().staticFieldBase(loadedLibraryNamesField)).removeIf(s -> s.contains("attach"));
+                        Utils.getUnsafe().putObject(WindowsHack.class, offset, Object.class.getModule());
+                        instrumentation = (Instrumentation) WindowsHack.Hack();
 
-                    instrumentation.addTransformer(PreMain.AT);
-                } else {
-                    System.out.println("Guess you are on Linux.");
-                    Utils.getUnsafe().putObject(LinuxHack.class, offset, Object.class.getModule());
-                    instrumentation = (Instrumentation) LinuxHack.hack();
-                    instrumentation.addTransformer(PreMain.AT);
+                        instrumentation.addTransformer(PreMain.AT);
+                    } else {
+                        System.out.println("Guess you are on Linux.");
+                        Utils.getUnsafe().putObject(LinuxHack.class, offset, Object.class.getModule());
+                        instrumentation = (Instrumentation) LinuxHack.hack();
+                        instrumentation.addTransformer(PreMain.AT);
+                    }
+                    System.out.println("Successfully get the InstrumentationImpl and add our transformer.");
+                    flag = true;
+                } catch (Throwable t) {
+                    System.out.println("Failed to get InstrumentationImpl. Fallback to attach api.");
                 }
-                System.out.println("Successfully get the InstrumentationImpl and add our transformer.");
+            } else {
+                System.out.println("We are on MacOS. Trying the attach api.");
                 flag = true;
-            } catch (Throwable t) {
-                System.out.println("Failed to get InstrumentationImpl. Fallback to attach api.");
             }
-        } else {
-            System.out.println("We are on MacOS. Trying the attach api.");
-            flag = true;
         }
 
         if (flag) {
