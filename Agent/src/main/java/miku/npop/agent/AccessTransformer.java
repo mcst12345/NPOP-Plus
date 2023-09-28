@@ -1,4 +1,4 @@
-package miku.npop;
+package miku.npop.agent;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -74,7 +74,4 @@ public class AccessTransformer implements ClassFileTransformer {
         }
     }
 
-    public static boolean isLoaded() {
-        return loaded;
-    }
 }

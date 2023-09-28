@@ -7,19 +7,24 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 
 import static java.lang.reflect.Modifier.*;
 
 public class AccessTransformer implements ClassFileTransformer {
-    private boolean loaded;
+    private static boolean loaded;
+
+    public AccessTransformer() {
+        System.out.println("Constructing AccessTransformer.");
+    }
+
+    public static boolean isLoaded() {
+        return loaded;
+    }
 
     @Override
-    @Nonnull
-    public byte[] transform(@Nullable ClassLoader classLoader, String s, @Nullable Class<?> aClass, @Nullable ProtectionDomain protectionDomain, byte[] bytes) {
+    public byte[] transform(ClassLoader classLoader, String s, Class<?> aClass, ProtectionDomain protectionDomain, byte[] bytes) {
         if (!loaded) {
             loaded = true;
             System.out.println("AccessTransformer is running.");
@@ -68,7 +73,7 @@ public class AccessTransformer implements ClassFileTransformer {
             cn.accept(cw);
             return cw.toByteArray();
 
-        } catch (Throwable t){
+        } catch (Throwable t) {
             return bytes;
         }
     }

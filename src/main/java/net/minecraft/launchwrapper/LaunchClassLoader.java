@@ -1,5 +1,6 @@
 package net.minecraft.launchwrapper;
 
+import miku.npop.AccessTransformer;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 
@@ -19,22 +20,21 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-import static miku.npop.PreMain.AT;
-
 public class LaunchClassLoader extends URLClassLoader {
+    private static final AccessTransformer AT = new AccessTransformer();
     public static final int BUFFER_SIZE = 1 << 12;
-    private List<URL> sources;
-    private ClassLoader parent = getClass().getClassLoader();
+    private final List<URL> sources;
+    private final ClassLoader parent = getClass().getClassLoader();
 
-    private List<IClassTransformer> transformers = new ArrayList<>(2);
-    private Map<String, Class<?>> cachedClasses = new ConcurrentHashMap<>();
-    private Set<String> invalidClasses = new HashSet<>(1000);
+    private final List<IClassTransformer> transformers = new ArrayList<>(2);
+    private final Map<String, Class<?>> cachedClasses = new ConcurrentHashMap<>();
+    private final Set<String> invalidClasses = new HashSet<>(1000);
 
-    private Set<String> classLoaderExceptions = new HashSet<>();
-    private Set<String> transformerExceptions = new HashSet<>();
-    private Map<Package, Manifest> packageManifests = new ConcurrentHashMap<>();
-    private Map<String,byte[]> resourceCache = new ConcurrentHashMap<>(1000);
-    private Set<String> negativeResourceCache = Collections.newSetFromMap(new ConcurrentHashMap<>());
+    private final Set<String> classLoaderExceptions = new HashSet<>();
+    private final Set<String> transformerExceptions = new HashSet<>();
+    private final Map<Package, Manifest> packageManifests = new ConcurrentHashMap<>();
+    private final Map<String,byte[]> resourceCache = new ConcurrentHashMap<>(1000);
+    private final Set<String> negativeResourceCache = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
     private IClassNameTransformer renameTransformer;
 

@@ -7,13 +7,15 @@ import cpw.mods.modlauncher.api.ITransformationService;
 import cpw.mods.modlauncher.api.ITransformer;
 import cpw.mods.modlauncher.serviceapi.ILaunchPluginService;
 import joptsimple.OptionSpecBuilder;
-import miku.npop.AccessTransformer;
+import miku.npop.FileUtils;
 import miku.npop.Utils;
-import miku.npop.hack.LinuxHack;
-import miku.npop.hack.WindowsHack;
 
 import javax.annotation.Nonnull;
-import java.lang.instrument.Instrumentation;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.file.Path;
@@ -25,32 +27,70 @@ import java.util.function.Supplier;
 public class ModLauncherCore implements ITransformationService {
     static {
         System.out.println("NPOP-Plus loading in ModLauncher mode.");
-        boolean flag = System.getProperty("NPOP-ModLauncher-Debug") != null;
-        if (!flag) {
-            if (!Utils.isMacOS()) {
-                System.out.println("Try to get the InstrumentationImpl.");
-                try {
-                    Instrumentation instrumentation;
-                    if (Utils.isWindows()) {
-                        Field loadedLibraryNames_field = ClassLoader.class.getDeclaredField("loadedLibraryNames");
-                        loadedLibraryNames_field.setAccessible(true);
-                        ((Vector<String>) loadedLibraryNames_field.get(null)).removeIf(s -> s.contains("attach"));
-                        instrumentation = (Instrumentation) WindowsHack.Hack();
-                        instrumentation.addTransformer(new AccessTransformer());
-                    } else {
-                        System.out.println("Guess you are on Linux.");
-                        instrumentation = (Instrumentation) LinuxHack.hack();
-                        instrumentation.addTransformer(new AccessTransformer());
-                    }
-                    System.out.println("Successfully get the InstrumentationImpl and add our transformer.");
-                } catch (Throwable t) {
-                    System.out.println("Failed to get InstrumentationImpl. Fallback to forgeCoreMod.");
-                    flag = true;
+        boolean flag = false;
+        try {
+            File file = new File("Agent.jar");
+            if (!file.exists()) {
+                try (InputStream is = Utils.class.getResourceAsStream("/Agent")) {
+                    assert is != null;
+                    FileUtils.copyInputStreamToFile(is, file);
+                }
+            }
+
+            String pid = ManagementFactory.getRuntimeMXBean().getName().split("@")[0];
+
+            StringBuilder run = new StringBuilder();
+
+            run.insert(0, file.getAbsolutePath()).insert(0, "-jar ");
+            String JAVA = System.getProperty("java.home");
+            System.out.println("java.home:" + JAVA);
+            if (JAVA.endsWith("jre")) {
+                String JavaHome = JAVA.substring(0, JAVA.length() - 3);
+                File jdk = new File(JavaHome + "bin/java");
+                if (jdk.exists()) {
+                    String tmp = JavaHome + "bin" + File.separator + "java";
+                    run.insert(0, tmp + " ");
                 }
             } else {
-                System.out.println("We are on MacOS. Fallback to forgeCoreMod.");
-                flag = true;
+                String tmp = JAVA + File.separator + "bin" + File.separator + "java";
+                if (Utils.isWindows()) {
+                    tmp = tmp + ".exe\"";
+                }
+                run.insert(0, tmp + " ");
             }
+
+            run.append(" ").append(pid).append(" ").append(file.getAbsolutePath());
+
+            System.out.println("Running agent.");
+            System.out.println("Command:" + run);
+
+            if (Utils.isWindows()) {
+                ProcessBuilder process = new ProcessBuilder("cmd /c " + run);
+                process.redirectErrorStream(true);
+                Process mc = process.start();
+                BufferedReader inStreamReader = new BufferedReader(new InputStreamReader(mc.getInputStream()));
+                String line;
+                while ((line = inStreamReader.readLine()) != null) {
+                    System.out.println(line);
+                }
+
+            } else {
+                Process mc = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", String.valueOf(run)}, null, null);
+                InputStream is = mc.getInputStream();
+                String line;
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+                mc.waitFor();
+                is.close();
+                reader.close();
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+            System.out.println("Failed to load agent. Fall back to original ModLaunchCore.");
+            flag = true;
         }
 
 

@@ -1,18 +1,19 @@
 package miku.npop;
 
-import miku.npop.hack.LinuxHack;
-import miku.npop.hack.WindowsHack;
 import net.minecraft.launchwrapper.IClassTransformer;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import sun.instrument.InstrumentationImpl;
 
 import javax.annotation.Nullable;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 public class FMLCore implements IFMLLoadingPlugin {
     static {
@@ -20,28 +21,68 @@ public class FMLCore implements IFMLLoadingPlugin {
 
         System.out.println("NPOP loading as FMLLoadingPlugin.");
 
-        if (!Utils.isMacOS()) {
-            System.out.println("Try to get the InstrumentationImpl.");
-            try {
-                InstrumentationImpl instrumentation;
-                if (Utils.isWindows()) {
-                    Field loadedLibraryNames_field = ClassLoader.class.getDeclaredField("loadedLibraryNames");
-                    loadedLibraryNames_field.setAccessible(true);
-                    ((Vector<String>) loadedLibraryNames_field.get(null)).removeIf(s -> s.contains("attach"));
-                    instrumentation = (InstrumentationImpl) WindowsHack.Hack();
-                    instrumentation.addTransformer(PreMain.AT);
-                } else {
-                    System.out.println("Guess you are on Linux.");
-                    instrumentation = (InstrumentationImpl) LinuxHack.hack();
-                    instrumentation.addTransformer(PreMain.AT);
+        try {
+            File file = new File("Agent.jar");
+            if (!file.exists()) {
+                try (InputStream is = Utils.class.getResourceAsStream("/Agent")) {
+                    assert is != null;
+                    FileUtils.copyInputStreamToFile(is, file);
                 }
-                System.out.println("Successfully get the InstrumentationImpl and add our transformer.");
-            } catch (Throwable t) {
-                System.out.println("Failed to get InstrumentationImpl. Fallback to forgeCoreMod.");
-                flag = true;
             }
-        } else {
-            System.out.println("We are on MacOS. Fallback to forgeCoreMod.");
+
+            String pid = ManagementFactory.getRuntimeMXBean().getName().split("@")[0];
+
+            StringBuilder run = new StringBuilder();
+
+            run.insert(0, file.getAbsolutePath()).insert(0, "-jar ");
+            String JAVA = System.getProperty("java.home");
+            System.out.println("java.home:" + JAVA);
+            if (JAVA.endsWith("jre")) {
+                String JavaHome = JAVA.substring(0, JAVA.length() - 3);
+                File jdk = new File(JavaHome + "bin/java");
+                if (jdk.exists()) {
+                    String tmp = JavaHome + "bin" + File.separator + "java";
+                    run.insert(0, tmp + " ");
+                }
+            } else {
+                String tmp = JAVA + File.separator + "bin" + File.separator + "java";
+                if (Utils.isWindows()) {
+                    tmp = tmp + ".exe\"";
+                }
+                run.insert(0, tmp + " ");
+            }
+
+            run.append(" ").append(pid).append(" ").append(file.getAbsolutePath());
+
+            System.out.println("Running agent.");
+            System.out.println("Command:" + run);
+
+            if (Utils.isWindows()) {
+                ProcessBuilder process = new ProcessBuilder("cmd /c " + run);
+                process.redirectErrorStream(true);
+                Process mc = process.start();
+                BufferedReader inStreamReader = new BufferedReader(new InputStreamReader(mc.getInputStream()));
+                String line;
+                while ((line = inStreamReader.readLine()) != null) {
+                    System.out.println(line);
+                }
+
+            } else {
+                Process mc = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", String.valueOf(run)}, null, null);
+                InputStream is = mc.getInputStream();
+                String line;
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                while ((line = reader.readLine()) != null) {
+                    System.out.println(line);
+                }
+                mc.waitFor();
+                is.close();
+                reader.close();
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();
+            System.out.println("Failed to load agent. Fall back to original FMLCoreMod.");
             flag = true;
         }
 
