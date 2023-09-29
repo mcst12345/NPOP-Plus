@@ -11,10 +11,7 @@ import miku.npop.FileUtils;
 import miku.npop.Utils;
 
 import javax.annotation.Nonnull;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -31,9 +28,28 @@ public class ModLauncherCore implements ITransformationService {
         try {
             File file = new File("Agent.jar");
             if (!file.exists()) {
-                try (InputStream is = Utils.class.getResourceAsStream("/Agent")) {
-                    assert is != null;
-                    FileUtils.copyInputStreamToFile(is, file);
+                if (Utils.isWindows()) {
+                    try (InputStream is = Utils.class.getResourceAsStream("/AgentWindows")) {
+                        assert is != null;
+                        FileUtils.copyInputStreamToFile(is, file);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else if (Utils.isMacOS()) {
+                    try (InputStream is = Utils.class.getResourceAsStream("/AgentMacOS")) {
+                        assert is != null;
+                        FileUtils.copyInputStreamToFile(is, file);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    System.out.println("Guess you are on Linux.");
+                    try (InputStream is = Utils.class.getResourceAsStream("/AgentLinux")) {
+                        assert is != null;
+                        FileUtils.copyInputStreamToFile(is, file);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
 

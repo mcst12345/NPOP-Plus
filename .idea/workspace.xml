@@ -5,38 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80667ce2-b30e-4419-96cc-933fb109eb1a" name="更改" comment="commit">
-      <change afterPath="$PROJECT_DIR$/Agent/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Agent/build.gradle" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Agent/src/main/java/miku/npop/agent/AccessTransformer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Agent/src/main/java/miku/npop/agent/AgentMain.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Agent/src/main/java/miku/npop/agent/Main.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Agent/src/main/java/miku/npop/agent/PreMain.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/FileUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/FileUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/miku/npop/FileUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/AccessTransformer.java" beforeDir="false" afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/AccessTransformer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/PreMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/PreMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/hack/LinuxHack.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/hack/WindowsHack.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/modLauncher/ModLauncherCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/_1.16.5/src/main/java/miku/npop/modLauncher/ModLauncherCore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_fabric/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/_fabric/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/AccessTransformer.java" beforeDir="false" afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/AccessTransformer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/PreMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/PreMain.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/fabric/NPOPPreLaunch.java" beforeDir="false" afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/fabric/NPOPPreLaunch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/hack/LinuxHack.java" beforeDir="false" afterPath="$PROJECT_DIR$/_fabric/src/main/java/miku/npop/hack/LinuxHack.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_fabric/src/main/resources/fabric.mod.json" beforeDir="false" afterPath="$PROJECT_DIR$/_fabric/src/main/resources/fabric.mod.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_fabric/src/main/resources/npop.mixins.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/miku/npop/AccessTransformer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/miku/npop/AccessTransformer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/miku/npop/FMLCore.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/miku/npop/FMLCore.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/miku/npop/NPOPTweaker.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/miku/npop/NPOPTweaker.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/miku/npop/PreMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/miku/npop/PreMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/miku/npop/hack/LinuxHack.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/miku/npop/hack/WindowsHack.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/LaunchClassLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/minecraft/launchwrapper/LaunchClassLoader.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -604,7 +577,15 @@
       <option name="project" value="LOCAL" />
       <updated>1695539129377</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="commit">
+      <option name="closed" value="true" />
+      <created>1695915007882</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1695915007882</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

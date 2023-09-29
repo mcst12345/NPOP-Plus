@@ -6,16 +6,14 @@ import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
 
 import javax.annotation.Nullable;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
 public class FMLCore implements IFMLLoadingPlugin {
+
     static {
         boolean flag = false;
 
@@ -24,9 +22,28 @@ public class FMLCore implements IFMLLoadingPlugin {
         try {
             File file = new File("Agent.jar");
             if (!file.exists()) {
-                try (InputStream is = Utils.class.getResourceAsStream("/Agent")) {
-                    assert is != null;
-                    FileUtils.copyInputStreamToFile(is, file);
+                if (Utils.isWindows()) {
+                    try (InputStream is = Utils.class.getResourceAsStream("/AgentWindows")) {
+                        assert is != null;
+                        FileUtils.copyInputStreamToFile(is, file);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else if (Utils.isMacOS()) {
+                    try (InputStream is = Utils.class.getResourceAsStream("/AgentMacOS")) {
+                        assert is != null;
+                        FileUtils.copyInputStreamToFile(is, file);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    System.out.println("Guess you are on Linux.");
+                    try (InputStream is = Utils.class.getResourceAsStream("/AgentLinux")) {
+                        assert is != null;
+                        FileUtils.copyInputStreamToFile(is, file);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
 
@@ -80,6 +97,7 @@ public class FMLCore implements IFMLLoadingPlugin {
                 is.close();
                 reader.close();
             }
+            NPOPTweaker.shouldLoad = false;
         } catch (Throwable t) {
             t.printStackTrace();
             System.out.println("Failed to load agent. Fall back to original FMLCoreMod.");
@@ -93,12 +111,15 @@ public class FMLCore implements IFMLLoadingPlugin {
                 transformers.setAccessible(true);
                 ((List<IClassTransformer>) transformers.get(Launch.classLoader)).add(FMLAccessTransformer.INSTANCE);
                 transformers.setAccessible(false);
+                NPOPTweaker.shouldLoad = false;
             } catch (Throwable t) {
                 throw new RuntimeException(t);
             }
 
             System.out.println("Success.");
         }
+
+
     }
 
 

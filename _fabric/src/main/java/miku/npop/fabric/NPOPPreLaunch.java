@@ -13,11 +13,28 @@ public class NPOPPreLaunch implements PreLaunchEntrypoint {
 
         File file = new File("Agent.jar");
         if (!file.exists()) {
-            try (InputStream is = Utils.class.getResourceAsStream("/Agent")) {
-                assert is != null;
-                FileUtils.copyInputStreamToFile(is, file);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            if (Utils.isWindows()) {
+                try (InputStream is = Utils.class.getResourceAsStream("/AgentWindows")) {
+                    assert is != null;
+                    FileUtils.copyInputStreamToFile(is, file);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else if (Utils.isMacOS()) {
+                try (InputStream is = Utils.class.getResourceAsStream("/AgentMacOS")) {
+                    assert is != null;
+                    FileUtils.copyInputStreamToFile(is, file);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } else {
+                System.out.println("Guess you are on Linux.");
+                try (InputStream is = Utils.class.getResourceAsStream("/AgentLinux")) {
+                    assert is != null;
+                    FileUtils.copyInputStreamToFile(is, file);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
@@ -34,12 +51,14 @@ public class NPOPPreLaunch implements PreLaunchEntrypoint {
         String JAVA = System.getProperty("java.home");
         System.out.println("java.home:" + JAVA);
         if (JAVA.endsWith("jre")) {
-            String JavaHome = JAVA.substring(0, JAVA.length() - 3);
-            File jdk = new File(JavaHome + "bin/java");
-            if (jdk.exists()) {
-                String tmp = JavaHome + "bin" + File.separator + "java";
-                run.insert(0, tmp + " ");
+            JAVA = JAVA.substring(0, JAVA.length() - 3);
+            File jdk = new File(JAVA + "bin/java");
+            assert jdk.exists();
+            String tmp = JAVA + "bin" + File.separator + "java";
+            if (Utils.isWindows()) {
+                tmp = tmp + ".exe\"";
             }
+            run.insert(0, tmp + " ");
         } else {
             String tmp = JAVA + File.separator + "bin" + File.separator + "java";
             if (Utils.isWindows()) {
@@ -49,6 +68,8 @@ public class NPOPPreLaunch implements PreLaunchEntrypoint {
         }
 
         run.append(" ").append(pid).append(" ").append(file.getAbsolutePath());
+
+        run.append(" -cp ").append(JAVA).append(File.separator).append("libs").append(File.separator).append("tools.jar");
 
         System.out.println("Running agent.");
         System.out.println("Command:" + run);
