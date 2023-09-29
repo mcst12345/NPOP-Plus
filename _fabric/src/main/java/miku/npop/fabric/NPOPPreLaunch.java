@@ -69,8 +69,6 @@ public class NPOPPreLaunch implements PreLaunchEntrypoint {
 
         run.append(" ").append(pid).append(" ").append(file.getAbsolutePath());
 
-        run.append(" -cp ").append(JAVA).append(File.separator).append("libs").append(File.separator).append("tools.jar");
-
         System.out.println("Running agent.");
         System.out.println("Command:" + run);
 
