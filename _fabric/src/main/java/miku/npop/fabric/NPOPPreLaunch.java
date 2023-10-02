@@ -52,17 +52,17 @@ public class NPOPPreLaunch implements PreLaunchEntrypoint {
         System.out.println("java.home:" + JAVA);
         if (JAVA.endsWith("jre")) {
             JAVA = JAVA.substring(0, JAVA.length() - 3);
-            File jdk = new File(JAVA + "bin/java");
+            File jdk = new File(JAVA + "bin"+File.separator+"java");
             assert jdk.exists();
             String tmp = JAVA + "bin" + File.separator + "java";
             if (Utils.isWindows()) {
-                tmp = tmp + ".exe\"";
+                tmp = tmp + ".exe";
             }
             run.insert(0, tmp + " ");
         } else {
             String tmp = JAVA + File.separator + "bin" + File.separator + "java";
             if (Utils.isWindows()) {
-                tmp = tmp + ".exe\"";
+                tmp = tmp + ".exe";
             }
             run.insert(0, tmp + " ");
         }
