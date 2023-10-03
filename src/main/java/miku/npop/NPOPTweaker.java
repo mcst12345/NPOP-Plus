@@ -56,7 +56,7 @@ public class NPOPTweaker implements ITweaker {
                 System.out.println("java.home:" + JAVA);
                 if (JAVA.endsWith("jre")) {
                     String JavaHome = JAVA.substring(0, JAVA.length() - 3);
-                    File jdk = new File(JavaHome + "bin/java");
+                    File jdk = new File(JavaHome + "bin" + File.separator + "java");
                     if (jdk.exists()) {
                         String tmp = JavaHome + "bin" + File.separator + "java";
                         run.insert(0, tmp + " ");
