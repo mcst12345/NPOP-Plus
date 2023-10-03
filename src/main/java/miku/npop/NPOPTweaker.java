@@ -55,16 +55,16 @@ public class NPOPTweaker implements ITweaker {
                 String JAVA = System.getProperty("java.home");
                 System.out.println("java.home:" + JAVA);
                 if (JAVA.endsWith("jre")) {
-                    String JavaHome = JAVA.substring(0, JAVA.length() - 3);
-                    File jdk = new File(JavaHome + "bin" + File.separator + "java");
-                    if (jdk.exists()) {
-                        String tmp = JavaHome + "bin" + File.separator + "java";
-                        run.insert(0, tmp + " ");
+                    String JavaHome = JAVA.substring(0, JAVA.length() - 3) + "bin" + File.separator + "java";
+                    if (Utils.isWindows()) {
+                        JavaHome = JavaHome + ".exe";
                     }
+                    File jdk = new File(JavaHome + "bin" + File.separator + "java");
+                    run.insert(0, jdk + " ");
                 } else {
                     String tmp = JAVA + File.separator + "bin" + File.separator + "java";
                     if (Utils.isWindows()) {
-                        tmp = tmp + ".exe\"";
+                        tmp = tmp + ".exe";
                     }
                     run.insert(0, tmp + " ");
                 }
