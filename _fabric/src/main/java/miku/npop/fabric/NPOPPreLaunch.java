@@ -55,7 +55,7 @@ public class NPOPPreLaunch implements PreLaunchEntrypoint {
             if (Utils.isWindows()) {
                 JavaHome = JavaHome + ".exe";
             }
-            File jdk = new File(JavaHome + "bin" + File.separator + "java");
+            File jdk = new File(JavaHome);
             run.insert(0, jdk + " ");
         } else {
             String tmp = JAVA + File.separator + "bin" + File.separator + "java";
