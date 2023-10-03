@@ -59,13 +59,14 @@ public class NPOPTweaker implements ITweaker {
                     if (Utils.isWindows()) {
                         JavaHome = JavaHome + ".exe";
                     }
-                    File jdk = new File(JavaHome);
-                    run.insert(0, jdk + " ");
+                    JavaHome = "\"" + JavaHome + "\"";
+                    run.insert(0, JavaHome + " ");
                 } else {
                     String tmp = JAVA + File.separator + "bin" + File.separator + "java";
                     if (Utils.isWindows()) {
                         tmp = tmp + ".exe";
                     }
+                    tmp = "\"" + tmp + "\"";
                     run.insert(0, tmp + " ");
                 }
 
